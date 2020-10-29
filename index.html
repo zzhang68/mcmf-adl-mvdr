@@ -1,0 +1,500 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Multi-channel Multi-frame ADL-MVDR For Target Speech Separation</title>
+</head>
+
+<body>
+<h2 id="MCMF-ADL-MVDR-for-target-speech-separation">Multi-channel Multi-frame ADL-MVDR For Target Speech Separation</h2>
+<p> <strong>Zhuohuang Zhang</strong> (zhuozhan@iu.edu), Yong Xu, Meng Yu, Shi-xiong Zhang, Lianwu Chen, Donald S. Williamson, Dong Yu
+<p> </p>
+<br><strong>Indiana University, Bloomington, IN</strong> 
+<br><strong>Tencent AI Lab, Bellevue, WA</strong> 
+<br>Tencent AI Lab, Shenzhen, China
+</p>
+    
+<p><img src="system_overview.png" width="1000" height="346" /></p>
+<p> Purely neural network based speech separation systems often cause nonlinear distortion on the separated speech, which is harmful for many automatic speech recognition (ASR) systems [1]. 
+The minimum variance distortionless response (MVDR) beamformer can be used to minimize the distortion, yet conventional MVDR approaches still result in high level of residual noise [2,3]. In this study, we propose a novel all deep learning MVDR (denoted as ADL-MVDR) framework, where the matrix inverse and eigenvalue decomposition are replaced by two RNNs. Our model can greatly remove the residual noise while ensuring the distortionless of the target speech. Our system outperforms prior arts in many objective evaluation metrics as well as the ASR accuracy. </p>
+
+<p> A Mandarin audio-visual dataset [4,5] is adopted for this study.</p>  
+    
+<p><strong> Systems evaluated: </strong></p>
+<p>1. NN with cRM: A Conv-TasNet variant [4,5] with complex ratio mask (denoted as cRM)</p>   
+<p>2. NN with cRF: A Conv-TasNet variant [4,5] with 3X3 size complex ratio filtering (denoted as cRF, please refer to the paper for details)</p>  
+<p>3. MVDR with cRM: An MVDR system with complex ratio mask [3]</p>  
+<p>4. MVDR with cRF: An MVDR system with 3X3 cRF</p>  
+<p>5. Multi-tap MVDR with cRM: A multi-tap MVDR system with complex ratio mask [3]</p>  
+<p>6. Multi-tap MVDR with cRM: A multi-tap MVDR system with 3X3 cRF</p>
+<p>7. <strong>Proposed ADL-MVDR with cRF</strong>: Our proposed ADL-MVDR system with 3X3 cRF </p> 
+ 
+<p>&nbsp;</p>
+
+<p><strong>Wearing a headphone is strongly recommended.</strong></p>
+<p>Purely NN systems can greatly remove the residual noise, but cause nonlinear distortion (e.g., blackhole on spectrogram).</p>
+<p>Conventional MVDR systems can ensure the distortionless of the target speech, while result in high level of residual noise.</p>
+<p>Our proposed <strong>ADL-MVDR systems</strong> can ensure the distortionless of the target speech while also eliminating the residual noise.</p>
+    
+<p><strong>Demo 1: Simulated 1-speaker noisy mixture for target speech separation</strong> [Sorry that all the demos are recorded in Mandarin Chinese.]</p>
+<p>
+<img src="1spk/mix.png" width="305" height="125" /> 
+<img src="1spk/ref.png" width="300" height="125" /> 
+<img src="1spk/NNbaseline.png" width="308" height="125" /> 
+<img src="1spk/NN3x3.png" width="305" height="125" /></p>
+<table width="1068" border="1">
+  <tr>
+    <td width="255">Mix (1 speaker + non-stationary additive noise) 
+        <audio
+        controls
+        src="1spk/mix.wav">
+            Your browser does not support the
+            <code>audio</code> element.
+        </audio>
+    </td>
+    <td width="255">Reverberant clean (reference) 
+    <audio
+        controls
+        src="1spk/ref.wav">
+            Your browser does not support the
+            <code>audio</code> element.
+    </audio>    
+    </td>
+    <td width="255">NN with cRM 
+    <audio
+        controls
+        src="1spk/NNbaseline.wav">
+            Your browser does not support the
+            <code>audio</code> element.
+    </audio>
+    </td>
+    <td width="255">NN with cRF 
+    <audio
+        controls
+        src="1spk/NN3x3.wav">
+            Your browser does not support the
+            <code>audio</code> element.
+    </audio>
+    </td>
+  </tr>
+</table>
+
+<p>
+<img src="1spk/MVDR.png" width="305" height="125" /> 
+<img src="1spk/MVDR3X3.png" width="305" height="125" />
+<img src="1spk/2tapMVDR.png" width="305" height="125" /> 
+<img src="1spk/2tapMVDR3X3.png" width="300" height="125" />
+</p>
+<table width="775" border="1">
+  <tr>
+    <td width="305">MVDR with cRM 
+    <audio
+        controls
+        src="1spk/MVDR.wav">
+            Your browser does not support the
+            <code>audio</code> element.
+    </audio>
+    </td>
+    <td width="305">MVDR with cRF  
+    <audio
+        controls
+        src="1spk/MVDR3X3.wav">
+            Your browser does not support the
+            <code>audio</code> element.
+    </audio>
+    </td>
+    <td width="275">Multi-tap MVDR with cRM (2-tap: [t-1,t])
+    <audio
+        controls
+        src="1spk/2tapMVDR.wav">
+            Your browser does not support the
+            <code>audio</code> element.
+    </audio>    
+    </td>
+    <td width="275">Multi-tap MVDR with cRF (2-tap: [t-1,t])
+    <audio
+        controls
+        src="1spk/2tapMVDR3X3.wav">
+            Your browser does not support the
+            <code>audio</code> element.
+    </audio>    
+    </td>
+  </tr>
+</table>
+<p>
+<img src="1spk/RD-MVDR.png" width="300" height="125" />  
+</p>
+<table width="255" border="1">
+  <tr>
+  <td width="255"><strong>Proposed ADL-MVDR with cRF </strong>
+      <audio
+        controls
+        src="1spk/RD-MVDR.wav">
+            Your browser does not support the
+            <code>audio</code> element.
+    </audio>
+  </td>
+  </tr>
+</table>   
+    
+
+<p>&nbsp;</p>
+
+    
+
+<p><strong>Demo2: Simulated 2-speaker noisy mixture for target speech separation </strong> <strong>separation</strong></p>
+<p>
+<img src="2spk/mix.png" width="305" height="125" /> 
+<img src="2spk/ref.png" width="300" height="125" /> 
+<img src="2spk/NNbaseline.png" width="308" height="125" /> 
+<img src="2spk/NN3x3.png" width="305" height="125" /></p>
+<table width="1068" border="1">
+  <tr>
+    <td width="255">Mix (2 speakers + non-stationary additive noise) 
+        <audio
+        controls
+        src="2spk/mix.wav">
+            Your browser does not support the
+            <code>audio</code> element.
+        </audio>
+    </td>
+    <td width="255">Reverberant clean (reference) 
+    <audio
+        controls
+        src="2spk/ref.wav">
+            Your browser does not support the
+            <code>audio</code> element.
+    </audio>    
+    </td>
+    <td width="255">NN with cRM 
+    <audio
+        controls
+        src="2spk/NNbaseline.wav">
+            Your browser does not support the
+            <code>audio</code> element.
+    </audio>
+    </td>
+    <td width="255">NN with cRF 
+    <audio
+        controls
+        src="2spk/NN3x3.wav">
+            Your browser does not support the
+            <code>audio</code> element.
+    </audio>
+    </td>
+  </tr>
+</table>
+
+<p>
+<img src="2spk/MVDR.png" width="305" height="125" /> 
+<img src="2spk/MVDR3X3.png" width="305" height="125" />
+<img src="2spk/2tapMVDR.png" width="305" height="125" /> 
+<img src="2spk/2tapMVDR3X3.png" width="300" height="125" />
+</p>
+<table width="775" border="1">
+  <tr>
+    <td width="305">MVDR with cRM 
+    <audio
+        controls
+        src="2spk/MVDR.wav">
+            Your browser does not support the
+            <code>audio</code> element.
+    </audio>
+    </td>
+    <td width="305">MVDR with cRF  
+    <audio
+        controls
+        src="2spk/MVDR3X3.wav">
+            Your browser does not support the
+            <code>audio</code> element.
+    </audio>
+    </td>
+    <td width="275">Multi-tap MVDR with cRM (2-tap: [t-1,t])
+    <audio
+        controls
+        src="2spk/2tapMVDR.wav">
+            Your browser does not support the
+            <code>audio</code> element.
+    </audio>    
+    </td>
+    <td width="275">Multi-tap MVDR with cRF (2-tap: [t-1,t])
+    <audio
+        controls
+        src="2spk/2tapMVDR3X3.wav">
+            Your browser does not support the
+            <code>audio</code> element.
+    </audio>    
+    </td>
+  </tr>
+</table>
+<p>
+<img src="2spk/RD-MVDR.png" width="300" height="125" />  
+</p>
+<table width="255" border="1">
+  <tr>
+  <td width="255"><strong>Proposed ADL-MVDR with cRF </strong>
+      <audio
+        controls
+        src="2spk/RD-MVDR.wav">
+            Your browser does not support the
+            <code>audio</code> element.
+    </audio>
+  </td>
+  </tr>
+</table>   
+<p>&nbsp;</p>
+
+    
+<p><strong>Demo 3: Simulated 3-speaker noisy mixture for target speech separation (waveforms aligned with the spectrograms shown in Fig. 2 of the paper)</strong></p>
+<p>
+<img src="3spk/mix.png" width="305" height="125" /> 
+<img src="3spk/ref.png" width="300" height="125" /> 
+<img src="3spk/NNbaseline.png" width="308" height="125" /> 
+<img src="3spk/NN3x3.png" width="305" height="125" /></p>
+<table width="1068" border="1">
+  <tr>
+    <td width="255">Mix (3 speakers + non-stationary additive noise) 
+        <audio
+        controls
+        src="3spk/mix.wav">
+            Your browser does not support the
+            <code>audio</code> element.
+        </audio>
+    </td>
+    <td width="255">Reverberant clean (reference) 
+    <audio
+        controls
+        src="3spk/ref.wav">
+            Your browser does not support the
+            <code>audio</code> element.
+    </audio>    
+    </td>
+    <td width="255">NN with cRM 
+    <audio
+        controls
+        src="3spk/NNbaseline.wav">
+            Your browser does not support the
+            <code>audio</code> element.
+    </audio>
+    </td>
+    <td width="255">NN with cRF 
+    <audio
+        controls
+        src="3spk/NN3x3.wav">
+            Your browser does not support the
+            <code>audio</code> element.
+    </audio>
+    </td>
+  </tr>
+</table>
+
+<p>
+<img src="3spk/MVDR.png" width="305" height="125" /> 
+<img src="3spk/MVDR3X3.png" width="305" height="125" />
+<img src="3spk/2tapMVDR.png" width="305" height="125" /> 
+<img src="3spk/2tapMVDR3X3.png" width="300" height="125" />
+</p>
+<table width="775" border="1">
+  <tr>
+    <td width="305">MVDR with cRM 
+    <audio
+        controls
+        src="3spk/MVDR.wav">
+            Your browser does not support the
+            <code>audio</code> element.
+    </audio>
+    </td>
+    <td width="305">MVDR with cRF  
+    <audio
+        controls
+        src="3spk/MVDR3X3.wav">
+            Your browser does not support the
+            <code>audio</code> element.
+    </audio>
+    </td>
+    <td width="275">Multi-tap MVDR with cRM (2-tap: [t-1,t])
+    <audio
+        controls
+        src="3spk/2tapMVDR.wav">
+            Your browser does not support the
+            <code>audio</code> element.
+    </audio>    
+    </td>
+    <td width="275">Multi-tap MVDR with cRF (2-tap: [t-1,t])
+    <audio
+        controls
+        src="3spk/2tapMVDR3X3.wav">
+            Your browser does not support the
+            <code>audio</code> element.
+    </audio>    
+    </td>
+  </tr>
+</table>
+<p>
+<img src="3spk/RD-MVDR.png" width="300" height="125" />    
+</p>
+<table width="255" border="1">
+  <tr>
+  <td width="255"><strong>Proposed ADL-MVDR with cRF </strong>
+      <audio
+        controls
+        src="3spk/RD-MVDR.wav">
+            Your browser does not support the
+            <code>audio</code> element.
+    </audio>
+  </td>
+  </tr>
+</table>   
+<p>&nbsp;</p>
+
+
+<p><strong>Demo 4: Performance between purely NNs and MF ADL-MVDR</strong></p>
+<p>
+<img src="3spk/mix.png" width="305" height="125" /> 
+<img src="3spk/ref.png" width="300" height="125" /> 
+<img src="3spk/NNbaseline.png" width="308" height="125" /> 
+<img src="3spk/NN3x3.png" width="305" height="125" /></p>
+<table width="1068" border="1">
+  <tr>
+    <td width="255">Mix (3 speakers + non-stationary additive noise) 
+        <audio
+        controls
+        src="3spk/mix.wav">
+            Your browser does not support the
+            <code>audio</code> element.
+        </audio>
+    </td>
+    <td width="255">Reverberant clean (reference) 
+    <audio
+        controls
+        src="3spk/ref.wav">
+            Your browser does not support the
+            <code>audio</code> element.
+    </audio>    
+    </td>
+    <td width="255">NN with cRM 
+    <audio
+        controls
+        src="3spk/NNbaseline.wav">
+            Your browser does not support the
+            <code>audio</code> element.
+    </audio>
+    </td>
+    <td width="255">NN with cRF 
+    <audio
+        controls
+        src="3spk/NN3x3.wav">
+            Your browser does not support the
+            <code>audio</code> element.
+    </audio>
+    </td>
+  </tr>
+</table>
+
+<p>
+<img src="3spk/MVDR.png" width="305" height="125" /> 
+<img src="3spk/MVDR3X3.png" width="305" height="125" />
+<img src="3spk/2tapMVDR.png" width="305" height="125" /> 
+<img src="3spk/2tapMVDR3X3.png" width="300" height="125" />
+</p>
+<table width="775" border="1">
+  <tr>
+    <td width="305">MVDR with cRM 
+    <audio
+        controls
+        src="3spk/MVDR.wav">
+            Your browser does not support the
+            <code>audio</code> element.
+    </audio>
+    </td>
+    <td width="305">MVDR with cRF  
+    <audio
+        controls
+        src="3spk/MVDR3X3.wav">
+            Your browser does not support the
+            <code>audio</code> element.
+    </audio>
+    </td>
+    <td width="275">Multi-tap MVDR with cRM (2-tap: [t-1,t])
+    <audio
+        controls
+        src="3spk/2tapMVDR.wav">
+            Your browser does not support the
+            <code>audio</code> element.
+    </audio>    
+    </td>
+    <td width="275">Multi-tap MVDR with cRF (2-tap: [t-1,t])
+    <audio
+        controls
+        src="3spk/2tapMVDR3X3.wav">
+            Your browser does not support the
+            <code>audio</code> element.
+    </audio>    
+    </td>
+  </tr>
+</table>
+<p>
+<img src="3spk/RD-MVDR.png" width="300" height="125" />    
+</p>
+<table width="255" border="1">
+  <tr>
+  <td width="255"><strong>Proposed ADL-MVDR with cRF </strong>
+      <audio
+        controls
+        src="3spk/RD-MVDR.wav">
+            Your browser does not support the
+            <code>audio</code> element.
+    </audio>
+  </td>
+  </tr>
+</table>   
+<p>&nbsp;</p>
+    
+    
+<p><strong>Real-world scenario: far-field recording and testing:</strong></p>
+<p><img src="camera_and_mic.png" width="600" height="180" /></p>
+<p>Real-world recording hardware device: 15-element non-uniform linear microphone array and 180 degree wide-angle camera</p>
+<p><img src="DOA_estimation.png" width="1000" height="260" /></p>
+<p>For the real-world videos, the 180-degree wide-angle camera is calibrated and synchronized with the 15-channel mic array. We estimate the rough DOA of the target speaker according to the location of the target speaker in the whole camera view [4]. Face detection is applied to track the target speaker's DOA. </p>
+    
+<p><strong>Demo 5: Real-world far-field recording and testing 1:</strong></p>
+<p>
+  <video src="video/real_world_demo1_mixture.mp4" width="340" height="273" controls preload></video>
+  <video src="video/real_world_demo1_multitap_MVDR_enh.mp4" width="340" height="273" controls preload></video>
+  <video src="video/real_world_demo1_rdmvdr_enh.mp4" width="340" height="273" controls preload></video>
+</p>
+<table width="1030" border="1">
+  <tr>
+    <td width="340">Real-world scenario: far-field <strong>two-speaker mixture</strong> recorded by the camera and microphone array</td>
+    <td width="345">Real-world scenario: <strong>separated male voice</strong> by our previously reported multi-tap MVDR (3-tap) method [3] (high level of residual noise)</td>
+      <td width="345">Real-world scenario: <strong>separated male voice</strong> by the <strong>proposed ADL-MVDR method</strong> (face detected in the red rectangle, used for DOA estimation)</td>
+  </tr>
+</table>
+  <p><strong>Demo 6: Real-world far-field recording and testing 2:</strong></p>
+<p>
+  <video src="video/real_world_demo2_mixture.mp4" width="340" height="273" controls preload></video>
+  <video src="video/real_world_demo2_multitap_MVDR_enh.mp4" width="340" height="273" controls preload></video>
+  <video src="video/real_world_demo2_rdmvdr_enh.mp4" width="340" height="273" controls preload></video>
+</p>
+<table width="1030" border="1">
+  <tr>
+    <td width="340">Real-world scenario: far-field <strong>two-speaker mixture</strong> recorded by the camera and microphone array</td>
+    <td width="345">Real-world scenario: <strong>separated female voice</strong> by our previously reported multi-tap MVDR (3-tap) method [3] (high level of residual noise)</td>
+    <td width="345">Real-world scenario: <strong>separated female voice</strong> by the <strong>proposed ADL-MVDR method</strong> (face detected in the red rectangle, used for DOA estimation).</td>
+  </tr>
+</table>
+    
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><strong>Reference: </strong></p>
+<p>[1] Du, Jun, et al. "Robust speech recognition with speech enhanced deep neural networks." Interspeech2014 </p>
+<p>[2] Xiao, Xiong, et al. "On time-frequency mask estimation for MVDR beamforming with application in robust speech recognition." ICASSP2017 </p>
+<p>[3] Xu, Yong, et al. "Neural Spatio-Temporal Beamformer for Target Speech Separation." accepted to Interspeech2020.</p>  
+<p>[4] Tan, Ke, et al. "Audio-visual speech separation and dereverberation with a two-stage multimodal network." IEEE Journal of Selected Topics in Signal Processing (2020).</p>
+<p>[5] Luo, Yi, and Nima Mesgarani. "Conv-tasnet: Surpassing ideal time–frequency magnitude masking for speech separation." IEEE/ACM transactions on audio, speech, and language processing 27.8 (2019): 1256-1266.</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+</body>
+</html>
