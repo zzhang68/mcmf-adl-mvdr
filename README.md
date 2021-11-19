@@ -4,4 +4,4 @@ Separated speech and real-world demos for paper "Multi-channel Multi-frame ADL-M
 
 Demo website: https://zzhang68.github.io/mcmf-adl-mvdr/
 
-Paper: https://zzhang68.github.io/papers/arXiv_journal_Zhang2021.pdf
+Paper: https://zzhang68.github.io/papers/Zhang.ADLMVDR.TASLP.2021.pdf
